@@ -33,7 +33,7 @@ function handleError (error) {
 	return null;
 }
 
-function getUserData(player) {
+function getUserData (player) {
 	return axios.all([
 		getProfile(player),
 		getRepos(player)
@@ -48,10 +48,18 @@ function getUserData(player) {
 	});
 }
 
+function sortPlayers (players) {
+	return players.sort(function (a,b) {
+		return b.score - a.score;
+	});
+}
+
 module.exports = {
 
 	battle: function(players) {
-
+		return axios.all(players.map(getUserData))
+			.then(sortPlayers)
+			.catch(handleError)
 	},
 
   	fetchPopularRepos: function (language) {
